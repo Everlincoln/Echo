@@ -2,7 +2,7 @@
 //state 负责让 React 更新页面。
 //localStorage 负责长期保存数据。
 //它们是两个独立系统。
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import './App.css'
 function App() {
   const [page, setPage] = useState('home')
@@ -44,6 +44,13 @@ function App() {
   const [type, setType] = useState('Person')
   const [message, setMessage] = useState('')
   const [isCandleLit, setIsCandleLit] = useState(false)
+
+  // Ensure candle is extinguished whenever the user leaves the candle page.
+  useEffect(() => {
+    if (page !== 'candle' && isCandleLit) {
+      setIsCandleLit(false)
+    }
+  }, [page])
 
   //点击save后通过saveMemory把零散输入变成一条卡片
 
@@ -89,7 +96,7 @@ function App() {
 //开始 h1里面放文字 Echo结束 h1
 //<main>是 HTML 语义标签，表示页面的主要内容区域。<div>和<p>和<h1>和<button>也是 HTML 标签，分别表示一个容器、段落和标题。
 //<main className="app">这是整个 App 的主要区域，html决定页面有什么，css决定页面长什么样，
-// 比如有很多个button需要不同的颜色women需要给button加不同的颜色 就要用HTML标签来区分不同的button
+// 比如有很多个button需要不同的颜色women需要给button加不同的颜色就要用HTML标签来区分不同的button
 // 给每个button加上不同的className，然后在CSS里根据className来设置不同的颜色
 //比如<button class="saveButton">在CSS里写.saveButton { background-color: blue; } 就可以让这个button变成蓝色
 //class 的本质：给 HTML 元素取名字，为了CSS 能找到它。
