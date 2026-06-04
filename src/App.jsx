@@ -119,7 +119,7 @@ function App() {
 // button 标签有两个 attribute：第一个是className="primaryButton"，意思是css.按钮长什么样
 //第二个是 onClick={() => setPage('create')}，意思是：按钮点击时做什么
 // div是tag
-
+return (
     <main className="app">
       {page === 'home' && (
         <section className="welcomeScreen">
