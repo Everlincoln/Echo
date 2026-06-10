@@ -225,39 +225,41 @@ function App() {
                 </div>
               ) : (
                 sortedMemories.map((memory) => (
-                  <article className="memoryEntry" key={memory.id}>
-                    <div className="memoryEntryHeader">
-                      <p className="memoryDate">{formatMemoryDate(memory.createdAt)}</p>
+                  <article className="memoryEntryShell" key={memory.id}>
+                    <div className="memoryEntry">
+                      <div className="memoryEntryHeader">
+                        <p className="memoryDate">{formatMemoryDate(memory.createdAt)}</p>
 
-                      <div
-                        className="memoryMenuArea"
-                        ref={openMenuId === memory.id ? menuAreaRef : null}
-                      >
-                        <button
-                          className="menuButton"
-                          aria-label={`Open actions for ${memory.name}`}
-                          onClick={() =>
-                            setOpenMenuId((current) => (current === memory.id ? null : memory.id))
-                          }
+                        <div
+                          className="memoryMenuArea"
+                          ref={openMenuId === memory.id ? menuAreaRef : null}
                         >
-                          ...
-                        </button>
+                          <button
+                            className="menuButton"
+                            aria-label={`Open actions for ${memory.name}`}
+                            onClick={() =>
+                              setOpenMenuId((current) => (current === memory.id ? null : memory.id))
+                            }
+                          >
+                            ...
+                          </button>
 
-                        {openMenuId === memory.id && (
-                          <div className="memoryMenu">
-                            <button onClick={() => openEditPage(memory)}>Edit</button>
-                            <button onClick={() => confirmDelete(memory.id)}>Delete</button>
-                          </div>
-                        )}
+                          {openMenuId === memory.id && (
+                            <div className="memoryMenu">
+                              <button onClick={() => openEditPage(memory)}>Edit</button>
+                              <button onClick={() => confirmDelete(memory.id)}>Delete</button>
+                            </div>
+                          )}
+                        </div>
                       </div>
-                    </div>
 
-                    <h3 className={`memoryName${hasCjkCharacters(memory.name) ? ' memoryNameCjk' : ''}`}>
-                      {memory.name}
-                    </h3>
-                    <p className={`memoryMessage${hasCjkCharacters(memory.message) ? ' memoryMessageCjk' : ''}`}>
-                      {memory.message}
-                    </p>
+                      <h3 className={`memoryName${hasCjkCharacters(memory.name) ? ' memoryNameCjk' : ''}`}>
+                        {memory.name}
+                      </h3>
+                      <p className={`memoryMessage${hasCjkCharacters(memory.message) ? ' memoryMessageCjk' : ''}`}>
+                        {memory.message}
+                      </p>
+                    </div>
                   </article>
                 ))
               )}
@@ -287,12 +289,12 @@ function App() {
         <section className="createScreen">
           <header className="editorHeader">
             <button className="textNavButton" onClick={() => goToPage(page === 'edit' ? 'memories' : 'home')}>
-              Back
+              ← Back
             </button>
           </header>
 
           <div className="editorShell">
-            <p className="eyebrow">{page === 'edit' ? 'Edit memory' : 'New memory'}</p>
+            <p className="eyebrow">{page === 'edit' ? 'Edit Memory' : 'New Memory'}</p>
 
             <form className="memoryForm">
               <label htmlFor="memory-name">Who is this memory for?</label>
@@ -306,14 +308,24 @@ function App() {
               {validation.name && <p className="formHint">{validation.name}</p>}
 
               <label htmlFor="memory-type">Memory type</label>
-              <select
+              <div
                 id="memory-type"
-                value={form.type}
-                onChange={(event) => updateForm('type', event.target.value)}
+                className="segmentedControl"
+                role="tablist"
+                aria-label="Memory type"
               >
-                <option>Person</option>
-                <option>Pet</option>
-              </select>
+                {['Person', 'Pet'].map((option) => (
+                  <button
+                    key={option}
+                    type="button"
+                    className={`segmentButton${form.type === option ? ' segmentButtonActive' : ''}`}
+                    aria-pressed={form.type === option}
+                    onClick={() => updateForm('type', option)}
+                  >
+                    {option}
+                  </button>
+                ))}
+              </div>
 
               <label htmlFor="memory-message">Memory</label>
               <textarea
@@ -325,13 +337,6 @@ function App() {
               {validation.message && <p className="formHint">{validation.message}</p>}
 
               <div className="editorActions">
-                <button
-                  type="button"
-                  className="secondaryButton subtleAction"
-                  onClick={() => goToPage(page === 'edit' ? 'memories' : 'home')}
-                >
-                  Cancel
-                </button>
                 <button type="button" className="primaryButton subtleAction" onClick={saveMemory}>
                   Save
                 </button>
